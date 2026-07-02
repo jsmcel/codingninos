@@ -3169,3 +3169,362 @@ body {
   overflow: visible;
   filter: drop-shadow(0 6px 0 rgba(23, 52, 59, 0.14));
 }
+
+/* Mobile pass (<=700px): flatten the absolute overlay layout into a natural column. */
+@media (max-width: 700px) {
+  .topbar.clean-topbar {
+    min-height: 52px;
+    padding: 6px 10px;
+    gap: 10px;
+  }
+
+  .clean-topbar .brand-lockup {
+    gap: 8px;
+  }
+
+  .clean-topbar .brand-mark {
+    width: 40px;
+    height: 34px;
+    border-radius: 10px;
+  }
+
+  .clean-topbar .brand-mark span:nth-child(1) { width: 13px; height: 13px; transform: translate(-8px, -5px) rotate(-7deg); }
+  .clean-topbar .brand-mark span:nth-child(2) { width: 13px; height: 13px; transform: translate(8px, 2px) rotate(12deg); }
+  .clean-topbar .brand-mark span:nth-child(3) { width: 11px; height: 11px; transform: translate(-5px, 8px); }
+
+  .clean-topbar h1 {
+    font-size: clamp(1.25rem, 6vw, 1.8rem);
+    white-space: nowrap;
+  }
+
+  .sound-toggle {
+    width: 36px;
+    height: 36px;
+  }
+
+  .lesson-shell {
+    width: 100%;
+    min-height: 0;
+    margin: 8px 0 0;
+    padding: 0 8px 12px;
+  }
+
+  .course-sidebar {
+    position: static;
+    display: grid;
+    gap: 7px;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .module-tabs {
+    gap: 6px;
+  }
+
+  .module-tab,
+  .module-tab > span {
+    width: 32px;
+    height: 32px;
+  }
+
+  .level-path {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 5px;
+  }
+
+  .level-node,
+  .level-node > span {
+    width: 27px;
+    height: 27px;
+  }
+
+  .stage-panel {
+    display: block;
+  }
+
+  .mission-strip {
+    position: static;
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 8px 88px 8px 12px;
+    border-radius: 16px;
+  }
+
+  .clean-board-panel {
+    min-height: 0;
+    padding: 12px 8px 14px;
+    border-width: 7px;
+    border-radius: 22px;
+    box-shadow: 0 8px 0 rgba(65, 126, 157, 0.22);
+  }
+
+  /* El camino de tierra decorativo cruzaria el tablero en un panel tan bajo. */
+  .clean-board-panel::after {
+    content: none;
+  }
+
+  .board-status {
+    display: none;
+  }
+
+  .sc-sun {
+    top: 6px;
+    right: 10px;
+    width: 58px;
+  }
+
+  .sc-cloud.a { top: 12px; left: 4%; width: 84px; }
+  .sc-cloud.b { top: 44px; right: 30%; width: 62px; }
+  .sc-cloud.c { display: none; }
+
+  .board {
+    width: min(100%, 62vh);
+    margin: 44px auto 0;
+  }
+
+  .step-chip {
+    top: 6px;
+    left: 8px;
+    max-width: calc(100% - 80px);
+    padding: 5px 10px 5px 6px;
+    transform: none;
+    animation: none;
+  }
+
+  .step-chip span {
+    min-height: 22px;
+    font-size: 0.7rem;
+  }
+
+  .step-chip strong {
+    font-size: 0.8rem;
+  }
+
+  /* Historia como tarjeta en flujo, no como capa gigante. */
+  .story-gate {
+    position: static;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    min-height: 0;
+    margin: 0 auto;
+    padding: 16px 14px 18px;
+    border-width: 3px;
+    border-radius: 18px;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .story-gate-hero {
+    min-height: 0;
+  }
+
+  .story-gate .official-character {
+    width: 108px;
+    min-height: 96px;
+  }
+
+  .story-gate .official-character img {
+    width: 104px;
+    max-height: 104px;
+  }
+
+  .story-gate-copy {
+    gap: 9px;
+    justify-items: center;
+  }
+
+  .story-gate h2 {
+    font-size: 1.45rem;
+  }
+
+  .story-gate-copy .eyebrow {
+    font-size: 0.72rem;
+  }
+
+  .story-lead,
+  .story-objective {
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+
+  .story-dialogue {
+    max-width: 100%;
+    padding: 9px 12px;
+    font-size: 0.9rem;
+  }
+
+  .story-dialogue::before {
+    left: 50%;
+    top: -16px;
+    transform: translateX(-50%) rotate(90deg);
+  }
+
+  .story-prompt {
+    width: 100%;
+    padding: 10px 10px;
+    gap: 8px;
+  }
+
+  .story-prompt strong {
+    font-size: 0.84rem;
+  }
+
+  .story-prompt span {
+    padding: 5px 9px;
+    font-size: 0.8rem;
+  }
+
+  .story-actions {
+    grid-column: 1;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .start-story-button {
+    flex: 1 1 auto;
+    justify-content: center;
+    min-height: 46px;
+  }
+
+  /* Mientras se lee la historia, el tablero no compite por el espacio. */
+  .clean-board-panel:has(.story-gate) .board,
+  .clean-board-panel:has(.story-gate) .step-chip {
+    display: none;
+  }
+
+  /* Bandeja en flujo bajo el tablero; Ejecutar ocupa su propia columna, sin tapar la tira. */
+  .clean-code-panel {
+    position: relative;
+    inset: auto;
+    grid-template-columns: minmax(0, 1fr) auto;
+    margin-top: 10px;
+    padding: 10px 10px 12px;
+    border-radius: 18px;
+  }
+
+  .program-stack {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .toolbox {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .code-actions {
+    position: static;
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .run-button {
+    flex: 0 0 auto;
+  }
+
+  .clean-code-panel .panel-heading {
+    right: 10px;
+    bottom: 10px;
+  }
+
+  .clean-code-panel .icon-button.danger {
+    width: 34px;
+    min-height: 34px;
+  }
+
+  .program-stack {
+    min-height: 58px;
+    max-height: 58px;
+    padding: 6px 8px;
+  }
+
+  .program-slot {
+    width: 50px;
+    min-width: 50px;
+    height: 42px;
+  }
+
+  .program-block {
+    width: 52px;
+    min-width: 52px;
+    max-width: 52px;
+    height: 44px;
+    min-height: 44px;
+  }
+
+  .toolbox {
+    padding: 2px 52px 6px 0;
+  }
+
+  .command-button {
+    width: 64px;
+    min-width: 64px;
+    height: 66px;
+    min-height: 66px;
+  }
+
+  .functional-object {
+    width: 42px;
+    height: 28px;
+  }
+
+  .command-button strong {
+    font-size: 0.66rem;
+  }
+
+  .command-button small {
+    font-size: 0.52rem;
+  }
+
+  .run-button {
+    width: 54px;
+    height: 54px;
+    min-height: 54px;
+    border-width: 5px;
+  }
+
+  .run-button svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .icon-button.hint {
+    width: 32px;
+    height: 32px;
+    min-height: 32px;
+  }
+
+  .result-screen {
+    left: 10px;
+    right: 10px;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    min-height: 0;
+    padding: 16px 14px;
+    text-align: center;
+  }
+
+  .result-medal {
+    width: 56px;
+    height: 56px;
+  }
+
+  .result-screen h2 {
+    font-size: 1.35rem;
+  }
+
+  .result-screen p {
+    font-size: 0.88rem;
+  }
+
+  .result-actions {
+    grid-column: 1;
+    justify-content: center;
+  }
+}
