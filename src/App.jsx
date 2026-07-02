@@ -7,6 +7,8 @@ import {
   GitBranch,
   Lightbulb,
   LockKeyhole,
+  Mic,
+  MicOff,
   Music2,
   Pause,
   Play,
@@ -22,7 +24,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { challenges, characters, commandCatalog, courseModules } from "./challenges.js";
-import { playCommand, setMuted, sounds } from "./audio.js";
+import { playCommand, say, setMuted, setVoiceMuted, sounds } from "./audio.js";
 import {
   ChickArt,
   ClockArt,
@@ -259,9 +261,9 @@ function runAtomicCommand(commandId, state, challenge, lookups) {
     const vector = directionVectors[ready.dir];
     const next = { x: ready.x + vector.x, y: ready.y + vector.y };
     if (lookups.signalSet.has(keyOf(next))) {
-      return moveOne(ready, challenge, lookups, "Si hay señal, Go");
+      return moveOne(ready, challenge, lookups, "Semaforo en verde, Go");
     }
-    return { ...ready, message: "Si hay señal: no habia señal delante." };
+    return { ...ready, message: "Semaforo: no hay verde delante, me quedo quieto." };
   }
   if (commandId === "moo" || commandId === "cluck") return runSound(commandId, state, challenge, lookups);
   if (commandId === "bridge") {
@@ -330,6 +332,30 @@ function executeProgram(challenge, program) {
   };
 }
 
+const stepVoiceLines = {
+  start: "¡Encendido!",
+  go: "¡Go!",
+  stop: "¡Stop! Fin.",
+  left: "Gira a la izquierda",
+  right: "Gira a la derecha",
+  wait: "Espera un turno",
+  hop: "¡Hop! Salto",
+  paint: "¡Pinta!",
+  moo: "¡Muuu!",
+  cluck: "¡Co, co, có!",
+  again2: "¡Otra vez, dos veces!",
+  again3: "¡Otra vez, tres veces!",
+  bridge: "Rutina puente",
+};
+
+function voiceLineForFrame(frame) {
+  if (frame.crashed) return "¡Oh, oh! Choque.";
+  if (frame.commandId === "ifSignalGo") {
+    return frame.message.includes("quieto") ? "No hay verde. Me quedo quieto." : "¡Verde! Adelante.";
+  }
+  return stepVoiceLines[frame.commandId] || "";
+}
+
 function readLocalStorage(key, fallback) {
   try {
     const raw = localStorage.getItem(key);
@@ -355,6 +381,7 @@ function App() {
   const [startedStories, setStartedStories] = useState({});
   const [runResult, setRunResult] = useState(null);
   const [soundOn, setSoundOn] = useState(true);
+  const [voiceOn, setVoiceOn] = useState(true);
   const lastPlayedFrame = useRef(0);
   const runChallengeId = useRef(null);
 
@@ -410,6 +437,10 @@ function App() {
   }, [soundOn]);
 
   useEffect(() => {
+    setVoiceMuted(!voiceOn);
+  }, [voiceOn]);
+
+  useEffect(() => {
     if (!isRunning || frameIndex === 0 || frameIndex === lastPlayedFrame.current) return;
     lastPlayedFrame.current = frameIndex;
     const frame = simulation.frames[frameIndex];
@@ -419,6 +450,8 @@ function App() {
     } else if (frame.commandId) {
       playCommand(frame.commandId);
     }
+    const line = voiceLineForFrame(frame);
+    if (line) say(line);
   }, [frameIndex, isRunning, simulation.frames]);
 
   useEffect(() => {
@@ -442,17 +475,20 @@ function App() {
       setRunResult(result);
       if (result === "success") {
         sounds.success();
+        say("¡Reto superado! ¡Bien hecho!");
       } else if (result === "incomplete") {
         sounds.incomplete();
+        say("Casi, casi. Prueba otra vez.");
       }
       if (simulation.success && !completedSet.has(challenge.id)) {
         setCompleted((items) => [...items, challenge.id]);
       }
       return undefined;
     }
-    const timer = window.setTimeout(() => setFrameIndex((current) => current + 1), 500);
+    // Con la voz activa cada paso dura mas para que le de tiempo a cantarlo.
+    const timer = window.setTimeout(() => setFrameIndex((current) => current + 1), voiceOn ? 900 : 500);
     return () => window.clearTimeout(timer);
-  }, [challenge.id, completedSet, frameIndex, isRunning, simulation.final.crashed, simulation.frames.length, simulation.success]);
+  }, [challenge.id, completedSet, frameIndex, isRunning, simulation.final.crashed, simulation.frames.length, simulation.success, voiceOn]);
 
   useEffect(() => {
     window.render_game_to_text = () =>
@@ -597,9 +633,19 @@ function App() {
             </div>
           </div>
           <button
+            aria-label={voiceOn ? "Silenciar la voz que canta los movimientos" : "Activar la voz que canta los movimientos"}
+            className={`sound-toggle voice ${voiceOn ? "" : "off"}`}
+            onClick={() => setVoiceOn((value) => !value)}
+            title={voiceOn ? "Voz de movimientos: encendida" : "Voz de movimientos: apagada"}
+            type="button"
+          >
+            {voiceOn ? <Mic size={20} aria-hidden="true" /> : <MicOff size={20} aria-hidden="true" />}
+          </button>
+          <button
             aria-label={soundOn ? "Silenciar sonidos" : "Activar sonidos"}
             className={`sound-toggle ${soundOn ? "" : "off"}`}
             onClick={() => setSoundOn((value) => !value)}
+            title={soundOn ? "Efectos de sonido: encendidos" : "Efectos de sonido: apagados"}
             type="button"
           >
             {soundOn ? <Volume2 size={20} aria-hidden="true" /> : <VolumeX size={20} aria-hidden="true" />}
@@ -1046,7 +1092,7 @@ function Board({ challenge, frame, character, result = null }) {
         >
           {isWater ? <PuddleArt /> : null}
           {isWall ? <HedgeArt /> : null}
-          {isSignal ? <SignalArt /> : null}
+          {isSignal ? <SignalArt corner={Boolean(isTarget || collectible)} /> : null}
           {isTarget ? <TargetArt /> : null}
           {isPaintGoal && !isPainted ? <PaintOutlineArt /> : null}
           {isPainted ? <SplatArt /> : null}

@@ -3528,3 +3528,14 @@ body {
     justify-content: center;
   }
 }
+
+/* Semaforo compartiendo casilla con meta o tesoro: pequeño y en la esquina. */
+.signal-corner {
+  inset: auto;
+  left: 2%;
+  top: 2%;
+  z-index: 3;
+  width: 48%;
+  height: 48%;
+  margin: 0;
+}

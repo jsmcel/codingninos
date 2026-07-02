@@ -73,3 +73,23 @@ export function playCommand(commandId) {
   const play = commandTones[commandId] || commandTones.go;
   play();
 }
+
+// Voz que canta cada movimiento (SpeechSynthesis), independiente de los tonos.
+let voiceMuted = false;
+
+export function setVoiceMuted(value) {
+  voiceMuted = value;
+  if (value && typeof window !== "undefined" && "speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
+  }
+}
+
+export function say(text) {
+  if (voiceMuted || typeof window === "undefined" || !("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "es-ES";
+  utterance.rate = 1.04;
+  utterance.pitch = 1.12;
+  window.speechSynthesis.speak(utterance);
+}

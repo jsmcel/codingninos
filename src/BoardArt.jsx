@@ -45,14 +45,23 @@ export function TargetArt() {
   );
 }
 
-export function SignalArt() {
+export function TrafficLightArt({ className = "" }) {
   return (
-    <svg aria-hidden="true" className="tile-art tile-art-fill" viewBox="0 0 64 64">
-      <circle className="signal-glow" cx="32" cy="34" r="15" fill="#8fdd62" {...strokeProps} />
-      <circle cx="32" cy="34" r="7" fill="#d4ff9c" stroke="none" />
-      <path d="M27 34 L31 38 L38 29" fill="none" stroke="#2c6e1f" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+    <svg aria-hidden="true" className={className} viewBox="0 0 64 64">
+      <line x1="32" y1="46" x2="32" y2="58" stroke="#5b6770" strokeWidth="5" strokeLinecap="round" />
+      <path d="M22 58 H42" stroke="#5b6770" strokeWidth="4" strokeLinecap="round" />
+      <rect x="20" y="5" width="24" height="42" rx="9" fill="#3a444b" {...strokeProps} />
+      <circle cx="32" cy="16" r="5.5" fill="#6b4a4d" stroke="rgba(0,0,0,0.25)" strokeWidth="1.5" />
+      <circle className="signal-glow" cx="32" cy="34" r="11" fill="rgba(94, 230, 107, 0.35)" stroke="none" />
+      <circle cx="32" cy="34" r="7.5" fill="#5ee66b" stroke="#2c6e1f" strokeWidth="2" />
+      <circle cx="29.5" cy="31.5" r="2.2" fill="#d4ffbc" stroke="none" />
     </svg>
   );
+}
+
+export function SignalArt({ corner = false }) {
+  // En casillas compartidas (meta/tesoro) el semaforo se aparta a la esquina para no taparse.
+  return <TrafficLightArt className={`tile-art ${corner ? "signal-corner" : "tile-art-fill traffic-signal"}`} />;
 }
 
 export function ClockArt({ done = false }) {
@@ -166,6 +175,7 @@ export function getCommandArt(commandId, className = "command-art") {
   if (commandId === "cluck") return <ChickArt className={className} />;
   if (commandId === "paint") return <BrushArt className={className} />;
   if (commandId === "again2" || commandId === "again3") return <LoopArt className={className} />;
+  if (commandId === "ifSignalGo") return <TrafficLightArt className={className} />;
   return null;
 }
 

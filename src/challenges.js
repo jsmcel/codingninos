@@ -185,9 +185,9 @@ export const commandCatalog = {
     tone: "#ffd24a",
   },
   ifSignalGo: {
-    label: "Si hay señal, Go",
+    label: "Si hay verde, Go",
     short: "SI",
-    action: "Avanza solo si la casilla de delante tiene señal.",
+    action: "Mira la casilla de delante: si el semaforo esta en verde avanza; si no, se queda quieto.",
     tone: "#86d965",
   },
   paint: {
@@ -447,7 +447,7 @@ export const challenges = [
     id: "arrow-map",
     moduleId: "m2-read-plan",
     order: 7,
-    title: "Mapa de flechas verdes",
+    title: "El camino de semáforos",
     skill: "Condicion simple",
     character: "nina",
     readingLevel: "Si... entonces",
@@ -455,11 +455,11 @@ export const challenges = [
     requiresStart: true,
     requiresStop: true,
     story:
-      "Nina Nodo encuentra hojas con lucecitas verdes escondidas en el mapa. El bloque Si no es magia: mira la casilla de delante y solo deja avanzar cuando hay señal. Así es como un programa decide con información de verdad.",
-    dialogue: "Si hay señal... ¡entonces adelante!",
-    prompt: "Completa la regla: si hay señal, entonces...",
-    vocabulary: ["si", "entonces", "señal"],
-    objective: "Introduce una condición: avanzar solo cuando la señal lo permite.",
+      "Nina Nodo llega a un camino con semáforos, como los de la calle. El bloque nuevo funciona así: mira la casilla de delante y, si el semáforo está en verde, da un paso. Si no hay verde delante, se queda quieto y no pasa nada malo. ¡Sigue los semáforos verdes hasta el mapa!",
+    dialogue: "¿Verde delante? ¡Pues adelante! ¿No hay verde? Quietecitos.",
+    prompt: "Completa la regla: si el semáforo está en verde, entonces...",
+    vocabulary: ["si", "verde", "avanzar"],
+    objective: "Tu primera condición: avanza solo cuando el semáforo de delante esté en verde.",
     toolbox: ["start", "ifSignalGo", "go", "right", "left", "stop"],
     solution: ["start", "ifSignalGo", "go", "left", "ifSignalGo", "stop"],
     board: {
@@ -726,11 +726,11 @@ export const challenges = [
     requiresStart: true,
     requiresStop: true,
     story:
-      "En el bosque de las decisiones hay hojas que dicen sí y sombras que dicen no. Nina Nodo nunca adivina: mira la señal de la casilla de delante y solo entonces deja pasar a Go. Así nace una decisión de verdad.",
+      "En el bosque de las decisiones hay semáforos escondidos entre los árboles. Nina Nodo nunca adivina: mira si el semáforo de delante está en verde y solo entonces deja pasar a Go. Así nace una decisión de verdad.",
     dialogue: "Mirar primero, decidir después.",
-    prompt: "¿Qué información mira el bloque Si antes de avanzar?",
-    vocabulary: ["decision", "informacion", "adivinar"],
-    objective: "Usa condiciones para avanzar solo cuando el camino lo permite.",
+    prompt: "¿Qué mira el bloque del semáforo antes de dar el paso?",
+    vocabulary: ["decision", "verde", "mirar"],
+    objective: "Usa condiciones para avanzar solo cuando el semáforo lo permite.",
     toolbox: ["start", "ifSignalGo", "go", "left", "right", "stop"],
     solution: ["start", "ifSignalGo", "go", "left", "ifSignalGo", "stop"],
     board: {
